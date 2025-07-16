@@ -3,10 +3,10 @@ import styled from "styled-components";
 import UserTable from "../../../Sections/UserList/UserTable";
 import CustomButton from "../../../components/CustomButton";
 import CustomTextField from "../../../components/CustomTextField";
-
-import AddUserModal from "../../../components/AddUserModal";
 import { useUserList } from "../../../hooks/Users/UserList";
 import UserCards from "../../../Sections/UserList/UserCards";
+import CustomModal from "../../../components/CustomModal";
+import AddUserForm from "../../../components/AddUserForm";
 
 const Container = styled.div`
   height: 100vh;
@@ -78,12 +78,16 @@ const UserList: React.FC = () => {
         <UserCards users={filteredUsers} paginationMode={paginationMode} />
       )}
 
-      {showModal && (
-        <AddUserModal
+      <CustomModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        width="400px"
+      >
+        <AddUserForm
           onClose={() => setShowModal(false)}
           onAddUser={handleAddUser}
         />
-      )}
+      </CustomModal>
     </Container>
   );
 };

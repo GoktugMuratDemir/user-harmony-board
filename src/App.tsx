@@ -1,20 +1,9 @@
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css'
-import UserListPage from './pages/UserListPage';
-import UserDetailPage from './pages/UserDetailPage';
+import { RouterProvider } from "react-router-dom";
+import "./App.css";
+import routes from "./Routes/routes";
 
 function App() {
-
-
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<UserListPage />} />
-        <Route path="/users/:id" element={<UserDetailPage />} />
-      </Routes>
-    </Router>
-  )
+  return <RouterProvider router={routes} />;
 }
 
-export default App
+export default App;

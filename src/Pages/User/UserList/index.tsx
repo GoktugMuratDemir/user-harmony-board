@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import UserTable from "../../../Sections/UserList/UserTable";
 import CustomButton from "../../../components/CustomButton";
-import CustomTextField from "../../../components/CustomTextField";
 import { useUserList } from "../../../hooks/Users/UserList";
 import UserCards from "../../../Sections/UserList/UserCards";
 import CustomModal from "../../../components/CustomModal";
@@ -46,14 +45,7 @@ const UserList: React.FC = () => {
             onClick={() => setViewMode("card")}
           />
         </div>
-        <div>
-          <CustomTextField
-            placeholder="Ara..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            variant="outlined"
-          />
-        </div>
+
         <div>
           <CustomButton
             text={
@@ -75,7 +67,12 @@ const UserList: React.FC = () => {
       {viewMode === "table" ? (
         <UserTable users={filteredUsers} />
       ) : (
-        <UserCards users={filteredUsers} paginationMode={paginationMode} />
+        <UserCards
+          users={filteredUsers}
+          paginationMode={paginationMode}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
       )}
 
       <CustomModal

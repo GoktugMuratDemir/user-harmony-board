@@ -1,6 +1,6 @@
 import React, { useState, useImperativeHandle, forwardRef } from "react";
-import { FormContext } from "./FormContext";
-import type { FormContextType } from "./FormContext";
+import { FormContext } from "../../Context/FormContext";
+import type { FormContextType } from "../../Context/FormContext";
 import * as yup from "yup";
 
 interface FormProviderProps<T extends object> {

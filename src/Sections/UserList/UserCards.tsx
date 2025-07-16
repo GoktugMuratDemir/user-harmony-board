@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 
-import { Link } from 'react-router-dom';
-import type { User } from '../types/types';
+import { Link } from "react-router-dom";
+import CustomTextField from "../../components/CustomTextField";
+import type { User } from "../../types/types";
 
 const CardsContainer = styled.div`
   display: grid;
@@ -56,52 +57,77 @@ const Pagination = styled.div`
 
 interface UserCardsProps {
   users: User[];
-  paginationMode: 'paginated' | 'all';
+  paginationMode: "paginated" | "all";
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
 }
 
-const UserCards: React.FC<UserCardsProps> = ({ users, paginationMode }) => {
+const UserCards: React.FC<UserCardsProps> = ({
+  users,
+  paginationMode,
+  searchTerm,
+  setSearchTerm,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12; // Kart görünümü için sayfa başına daha fazla öğe
 
   const totalPages = Math.ceil(users.length / itemsPerPage);
-  const paginatedUsers = paginationMode === 'paginated' 
-    ? users.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-    : users;
+  const paginatedUsers =
+    paginationMode === "paginated"
+      ? users.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+      : users;
 
   return (
-    <>
+    <div>
+      <CustomTextField
+        placeholder="Ara..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        variant="outlined"
+      />
+
       <CardsContainer>
-        {paginatedUsers.map(user => (
+        {paginatedUsers.map((user) => (
           <Card key={user.id}>
             <CardHeader>{user.name}</CardHeader>
-            <CardField><strong>Email:</strong> {user.email}</CardField>
-            <CardField><strong>Rol:</strong> {user.role}</CardField>
             <CardField>
-              <strong>Oluşturulma Tarihi:</strong> {new Date(user.createdAt).toLocaleDateString()}
+              <strong>Email:</strong> {user.email}
+            </CardField>
+            <CardField>
+              <strong>Rol:</strong> {user.role}
+            </CardField>
+            <CardField>
+              <strong>Oluşturulma Tarihi:</strong>{" "}
+              {new Date(user.createdAt).toLocaleDateString()}
             </CardField>
             <DetailButton to={`/users/${user.id}`}>Detaylar</DetailButton>
           </Card>
         ))}
       </CardsContainer>
 
-      {paginationMode === 'paginated' && (
+      {paginationMode === "paginated" && (
         <Pagination>
-          <button 
+          <button
             disabled={currentPage === 1}
-            onClick={() => setCurrentPage(p => p - 1)}
+            onClick={() => setCurrentPage((p) => p - 1)}
           >
             Önceki
           </button>
-          <span>Sayfa {currentPage} / {totalPages}</span>
-          <button 
+          <span>
+            Sayfa {currentPage} / {totalPages}
+          </span>
+          <button
             disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(p => p + 1)}
+            onClick={() => setCurrentPage((p) => p + 1)}
           >
             Sonraki
           </button>
         </Pagination>
       )}
-    </>
+    </div>
   );
 };
 

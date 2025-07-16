@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import UserTable from "../../../components/UserTable";
+import CustomButton from "../../../components/CustomButton";
 import UserCards from "../../../components/UserCards";
 import AddUserModal from "../../../components/AddUserModal";
 import { useUserList } from "../../../hooks/Users/UserList";
@@ -34,8 +35,14 @@ const UserList: React.FC = () => {
     <Container>
       <Toolbar>
         <div>
-          <button onClick={() => setViewMode("table")}>Tablo Görünümü</button>
-          <button onClick={() => setViewMode("card")}>Kart Görünümü</button>
+          <CustomButton
+            text="Tablo Görünümü"
+            onClick={() => setViewMode("table")}
+          />
+          <CustomButton
+            text="Kart Görünümü"
+            onClick={() => setViewMode("card")}
+          />
         </div>
         <div>
           <input
@@ -46,16 +53,20 @@ const UserList: React.FC = () => {
           />
         </div>
         <div>
-          <button
+          <CustomButton
+            text={
+              paginationMode === "paginated" ? "Tümünü Göster" : "Sayfalandır"
+            }
             onClick={() =>
               setPaginationMode((p) =>
                 p === "paginated" ? "all" : "paginated"
               )
             }
-          >
-            {paginationMode === "paginated" ? "Tümünü Göster" : "Sayfalandır"}
-          </button>
-          <button onClick={() => setShowModal(true)}>+ Kullanıcı Ekle</button>
+          />
+          <CustomButton
+            text="+ Kullanıcı Ekle"
+            onClick={() => setShowModal(true)}
+          />
         </div>
       </Toolbar>
 

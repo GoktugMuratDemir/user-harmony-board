@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import UserTable from "../../../components/UserTable";
+import UserTable from "../../../Sections/UserList/UserTable";
 import CustomButton from "../../../components/CustomButton";
 import CustomTextField from "../../../components/CustomTextField";
-import UserCards from "../../../components/UserCards";
+
 import AddUserModal from "../../../components/AddUserModal";
 import { useUserList } from "../../../hooks/Users/UserList";
+import UserCards from "../../../Sections/UserList/UserCards";
 
 const Container = styled.div`
   height: 100vh;
@@ -72,7 +73,7 @@ const UserList: React.FC = () => {
       </Toolbar>
 
       {viewMode === "table" ? (
-        <UserTable users={filteredUsers} paginationMode={paginationMode} />
+        <UserTable users={filteredUsers} />
       ) : (
         <UserCards users={filteredUsers} paginationMode={paginationMode} />
       )}

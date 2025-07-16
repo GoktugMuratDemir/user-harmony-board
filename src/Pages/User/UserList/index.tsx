@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import UserTable from "../../../components/UserTable";
 import CustomButton from "../../../components/CustomButton";
+import CustomTextField from "../../../components/CustomTextField";
 import UserCards from "../../../components/UserCards";
 import AddUserModal from "../../../components/AddUserModal";
 import { useUserList } from "../../../hooks/Users/UserList";
@@ -45,11 +46,11 @@ const UserList: React.FC = () => {
           />
         </div>
         <div>
-          <input
-            type="text"
+          <CustomTextField
             placeholder="Ara..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            variant="outlined"
           />
         </div>
         <div>

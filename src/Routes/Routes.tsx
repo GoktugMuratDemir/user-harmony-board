@@ -1,15 +1,15 @@
-import { createBrowserRouter } from 'react-router-dom';
-import UserListPage from '../pages/UserListPage';
-import UserDetailPage from '../pages/UserDetailPage';
+import { createBrowserRouter } from "react-router-dom";
+import UserList from "../Pages/User/UserList";
+import UserDetail from "../Pages/User/UserDetail";
 
 const routes = createBrowserRouter([
   {
-    path: '/',
-    element: <UserListPage />,
+    path: "/",
+    element: <UserList />,
   },
   {
-    path: '/users/:id',
-    element: <UserDetailPage />,
+    path: "/users/:id",
+    element: <UserDetail />,
   },
 ]);
 

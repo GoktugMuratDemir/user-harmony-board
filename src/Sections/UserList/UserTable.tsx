@@ -11,7 +11,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
   const columns = [
     { field: "name", headerName: "Ad" },
     { field: "email", headerName: "Email" },
-    { field: "role", headerName: "Rol" },
+    { field: "role", headerName: "Rol", grouping: true },
     {
       field: "createdAt",
       headerName: "Oluşturulma Tarihi",

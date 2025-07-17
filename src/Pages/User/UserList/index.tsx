@@ -98,50 +98,36 @@ const UserList: React.FC = () => {
             <CustomButton
               text="Tablo Görünümü"
               onClick={() => setViewMode("table")}
-              style={
-                viewMode === "table"
-                  ? {
-                      background: Colors.primary[500],
-                      color: "#fff",
-                      fontWeight: 600,
-                    }
-                  : {
-                      background: Colors.primary[100],
-                      color: Colors.primary[600],
-                    }
-              }
+              variant="contained"
+              active={viewMode === "table"}
             />
             <CustomButton
               text="Kart Görünümü"
               onClick={() => setViewMode("card")}
-              style={
-                viewMode === "card"
-                  ? {
-                      background: Colors.primary[500],
-                      color: "#fff",
-                      fontWeight: 600,
-                    }
-                  : {
-                      background: Colors.primary[100],
-                      color: Colors.primary[600],
-                    }
-              }
+              variant="contained"
+              active={viewMode === "card"}
             />
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <CustomButton
-              text={
-                paginationMode === "paginated" ? "Tümünü Göster" : "Sayfalandır"
-              }
-              onClick={() =>
-                setPaginationMode((p) =>
-                  p === "paginated" ? "all" : "paginated"
-                )
-              }
-            />
+            {viewMode === "card" && (
+              <CustomButton
+                text={
+                  paginationMode === "paginated"
+                    ? "Tümünü Göster"
+                    : "Sayfalandır"
+                }
+                onClick={() =>
+                  setPaginationMode((p) =>
+                    p === "paginated" ? "all" : "paginated"
+                  )
+                }
+                variant="outlined"
+              />
+            )}
             <CustomButton
               text="+ Kullanıcı Ekle"
               onClick={() => setShowModal(true)}
+              variant="outlined"
             />
           </div>
         </Toolbar>

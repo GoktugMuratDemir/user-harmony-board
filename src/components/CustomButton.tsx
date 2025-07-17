@@ -9,9 +9,23 @@ interface CustomButtonProps
   text: string;
   icon?: React.ReactNode;
   variant?: Variant;
+  active?: boolean;
 }
 
 const variantStyles = {
+  containedActive: css`
+    background: ${Colors.primary[500]};
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 4px 16px 0 ${Colors.primary[200]};
+  `,
+  outlinedActive: css`
+    background: ${Colors.primary[100]};
+    color: ${Colors.primary[600]};
+    border: 2px solid ${Colors.primary[600]};
+    font-weight: 700;
+  `,
   contained: css`
     background: ${Colors.primary[500]};
     color: ${Colors.textLight};
@@ -62,13 +76,19 @@ const variantStyles = {
   `,
 };
 
-const StyledButton = styled.button<{ variant: Variant }>`
+const StyledButton = styled.button<{ variant: Variant; active?: boolean }>`
   font-size: 1rem;
   padding: 10px 24px;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  ${(props) => variantStyles[props.variant]}
+  ${({ variant, active }) => {
+    if (active) {
+      if (variant === "contained") return variantStyles.containedActive;
+      if (variant === "outlined") return variantStyles.outlinedActive;
+    }
+    return variantStyles[variant];
+  }}
 `;
 
 const IconWrapper = styled.span`
@@ -81,10 +101,11 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   text,
   icon,
   variant = "contained",
+  active = false,
   ...rest
 }) => {
   return (
-    <StyledButton variant={variant} {...rest}>
+    <StyledButton variant={variant} active={active} {...rest}>
       {icon && <IconWrapper>{icon}</IconWrapper>}
       {text}
     </StyledButton>

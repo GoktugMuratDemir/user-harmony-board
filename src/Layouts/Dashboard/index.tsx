@@ -19,6 +19,7 @@ const Content = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
+  gap: 16px;
 `;
 
 const Main = styled.main`

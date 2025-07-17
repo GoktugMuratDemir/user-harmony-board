@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const StyledHeader = styled.header`
   width: 100%;
   height: 68px;
+  min-height: 68px;
   background: linear-gradient(
     90deg,
     ${Colors.primary[600]} 0%,

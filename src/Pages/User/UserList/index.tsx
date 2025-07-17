@@ -98,10 +98,34 @@ const UserList: React.FC = () => {
             <CustomButton
               text="Tablo Görünümü"
               onClick={() => setViewMode("table")}
+              style={
+                viewMode === "table"
+                  ? {
+                      background: Colors.primary[500],
+                      color: "#fff",
+                      fontWeight: 600,
+                    }
+                  : {
+                      background: Colors.primary[100],
+                      color: Colors.primary[600],
+                    }
+              }
             />
             <CustomButton
               text="Kart Görünümü"
               onClick={() => setViewMode("card")}
+              style={
+                viewMode === "card"
+                  ? {
+                      background: Colors.primary[500],
+                      color: "#fff",
+                      fontWeight: 600,
+                    }
+                  : {
+                      background: Colors.primary[100],
+                      color: Colors.primary[600],
+                    }
+              }
             />
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>

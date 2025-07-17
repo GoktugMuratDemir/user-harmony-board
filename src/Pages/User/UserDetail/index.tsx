@@ -22,7 +22,6 @@ const Bg = styled.div`
 
 const Card = styled.div`
   background: ${Colors.surface};
-  border-radius: 32px;
   box-shadow: 0 8px 40px 0 ${Colors.primary[200]};
   min-width: 340px;
   max-width: 480px;

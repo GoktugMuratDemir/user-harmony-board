@@ -14,16 +14,17 @@ const HomeBg = styled.div`
 
 const HomeCard = styled.div`
   background: ${Colors.surface};
-  border-radius: 32px;
   box-shadow: 0 8px 40px 0 ${Colors.primary[200]};
   min-width: 340px;
   max-width: 1100px;
+  border-radius: 32px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 38px 32px 32px 32px;
   border: 1.5px solid ${Colors.border};
+  margin-bottom: 24px;
 `;
 
 const HomeIcon = styled.div`

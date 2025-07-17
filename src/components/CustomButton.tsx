@@ -1,3 +1,4 @@
+import Colors from "../Styles/Colors";
 import React from "react";
 import styled, { css } from "styled-components";
 
@@ -12,37 +13,50 @@ interface CustomButtonProps
 
 const variantStyles = {
   contained: css`
-    background: #1976d2;
-    color: #fff;
+    background: ${Colors.primary[500]};
+    color: ${Colors.textLight};
     border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px 0 ${Colors.primary[100]};
+    font-weight: 600;
     &:hover {
-      background: #1565c0;
+      background: ${Colors.primary[600]};
+      color: #fff;
+      box-shadow: 0 4px 16px 0 ${Colors.primary[200]};
     }
   `,
   outlined: css`
     background: transparent;
-    color: #1976d2;
-    border: 1.5px solid #1976d2;
+    color: ${Colors.primary[500]};
+    border: 1.5px solid ${Colors.primary[500]};
+    border-radius: 10px;
+    box-shadow: 0 2px 8px 0 ${Colors.primary[100]};
+    font-weight: 600;
     &:hover {
-      background: #e3f2fd;
+      background: ${Colors.primary[100]};
+      color: ${Colors.primary[600]};
+      border: 1.5px solid ${Colors.primary[600]};
     }
   `,
   text: css`
     background: transparent;
-    color: #1976d2;
+    color: ${Colors.primary[500]};
     border: none;
+    font-weight: 600;
     &:hover {
-      background: #e3f2fd;
+      background: ${Colors.primary[100]};
+      color: ${Colors.primary[600]};
     }
   `,
   link: css`
     background: none;
-    color: #1976d2;
+    color: ${Colors.primary[500]};
     border: none;
     text-decoration: underline;
     padding: 0;
+    font-weight: 600;
     &:hover {
-      color: #1565c0;
+      color: ${Colors.primary[600]};
       background: none;
     }
   `,
@@ -50,10 +64,10 @@ const variantStyles = {
 
 const StyledButton = styled.button<{ variant: Variant }>`
   font-size: 1rem;
-  padding: 8px 20px;
-  border-radius: 4px;
+  padding: 10px 24px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
   ${(props) => variantStyles[props.variant]}
 `;
 

@@ -1,15 +1,19 @@
 import React from "react";
-
 import styled, { css } from "styled-components";
 import Colors from "../Styles/Colors";
 
 type Variant = "outlined" | "filled";
 
-interface CustomTextFieldProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface CustomSelectProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
+  options: Option[];
   variant?: Variant;
-  icon?: React.ReactNode;
 }
 
 const variantStyles = {
@@ -26,20 +30,20 @@ const variantStyles = {
     }
   `,
   filled: css`
-    background: ${Colors.info[100]};
+    background: ${Colors.info?.[100] || Colors.primary[100]};
     border: none;
     color: ${Colors.text};
     border-radius: 10px;
     box-shadow: 0 2px 8px 0 ${Colors.primary[100]};
     &:focus {
-      background: ${Colors.info[200]};
+      background: ${Colors.info?.[200] || Colors.primary[200]};
       outline: 2px solid ${Colors.primary[500]};
       box-shadow: 0 4px 16px 0 ${Colors.primary[200]};
     }
   `,
 };
 
-const StyledInputWrapper = styled.div`
+const StyledSelectWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -51,55 +55,42 @@ const StyledLabel = styled.label`
   margin-bottom: 2px;
 `;
 
-const InputContainer = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-`;
-
-const IconWrapper = styled.span`
-  display: inline-flex;
-  align-items: center;
-  position: absolute;
-  left: 10px;
-`;
-
-const StyledInput = styled.input<{ variant: Variant; hasIcon: boolean }>`
+const StyledSelect = styled.select<{ variant: Variant }>`
   font-size: 1rem;
   padding: 10px 16px;
   border-radius: 10px;
   transition: background 0.2s, border 0.2s, box-shadow 0.2s;
   width: 100%;
   ${(props) => variantStyles[props.variant]}
-  ${(props) => props.hasIcon && "padding-left: 38px;"}
 `;
 
-const CustomTextField: React.FC<CustomTextFieldProps> = ({
+const CustomSelect: React.FC<CustomSelectProps> = ({
   label,
+  options,
   variant = "outlined",
-  icon,
   id,
   ...rest
 }) => {
-  const inputId =
+  const selectId =
     id ||
     (label
-      ? `custom-textfield-${label.replace(/\s+/g, "-").toLowerCase()}`
+      ? `custom-select-${label.replace(/\s+/g, "-").toLowerCase()}`
       : undefined);
   return (
-    <StyledInputWrapper>
-      {label && <StyledLabel htmlFor={inputId}>{label}</StyledLabel>}
-      <InputContainer>
-        {icon && <IconWrapper>{icon}</IconWrapper>}
-        <StyledInput
-          id={inputId}
-          variant={variant}
-          hasIcon={!!icon}
-          {...rest}
-        />
-      </InputContainer>
-    </StyledInputWrapper>
+    <StyledSelectWrapper>
+      {label && <StyledLabel htmlFor={selectId}>{label}</StyledLabel>}
+      <StyledSelect id={selectId} variant={variant} {...rest}>
+        <option value="" disabled>
+          Seçiniz
+        </option>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </StyledSelect>
+    </StyledSelectWrapper>
   );
 };
 
-export default CustomTextField;
+export default CustomSelect;

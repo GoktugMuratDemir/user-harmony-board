@@ -1,5 +1,6 @@
 import React from "react";
 import { useFormContext } from "../../Context/FormContext";
+import CustomCheckbox from "../CustomCheckbox";
 
 interface FormCheckboxProps {
   label: string;
@@ -15,17 +16,23 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({ label, name }) => {
 
   return (
     <div style={{ marginBottom: 15 }}>
-      <label style={{ display: "block", marginBottom: 5 }}>
-        <input
-          type="checkbox"
-          name={name}
-          checked={!!values[name]}
-          onChange={handleChange}
-        />{" "}
-        {label}
-      </label>
+      <CustomCheckbox
+        label={label}
+        name={name}
+        checked={!!values[name]}
+        onChange={handleChange}
+      />
       {errors[name] && (
-        <span style={{ color: "red", fontSize: 12 }}>{errors[name]}</span>
+        <span
+          style={{
+            color: "#e53935",
+            fontSize: 12,
+            marginTop: 4,
+            display: "block",
+          }}
+        >
+          {errors[name]}
+        </span>
       )}
     </div>
   );

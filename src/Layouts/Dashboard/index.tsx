@@ -1,33 +1,39 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
+import Colors from "../../Styles/Colors";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   height: 100vh;
+  max-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  background: ${Colors.background};
 `;
 
 const Content = styled.div`
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 `;
 
 const Main = styled.main`
-  flex: 1;
-  background: #f5f5f5;
-  padding: 24px;
+  background: ${Colors.surface};
   overflow-y: auto;
+  width: 100%;
+  box-shadow: 0 2px 8px 0 ${Colors.border};
 `;
 
 const DashboardLayout = () => {
   return (
     <Wrapper>
-      <Header />
+      <Sidebar />
       <Content>
-        <Sidebar />
+        <Header />
         <Main>
           <Outlet />
         </Main>

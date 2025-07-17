@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import CustomTextField from "./CustomTextField";
 
+type FieldValue = string | number | boolean | undefined;
 type Column<T> = {
   field: string;
   headerName: string;
@@ -9,8 +10,9 @@ type Column<T> = {
   type?: string;
   description?: string;
   sortable?: boolean;
-  valueGetter?: (value: unknown, row: T) => unknown;
+  valueGetter?: (value: FieldValue, row: T) => FieldValue;
   grouping?: boolean;
+  renderCell?: (row: T) => React.ReactNode;
 };
 
 type CustomTableProps<T> = {
@@ -18,26 +20,51 @@ type CustomTableProps<T> = {
   rows: T[];
 };
 
+import Colors from "../Styles/Colors";
+
 const TableWrapper = styled.div`
   overflow-x: auto;
+  background: ${Colors.surface};
+  border-radius: 16px;
+  box-shadow: 0 4px 24px 0 ${Colors.primary[100]};
+  padding: 24px 16px 8px 16px;
 `;
 
 const StyledTable = styled.table`
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
 `;
 
 const StyledTh = styled.th<{ minwidth?: number }>`
   min-width: ${({ minwidth }) => minwidth || 100}px;
-  border: 1px solid #ddd;
-  padding: 8px;
-  background: #f5f5f5;
+  border-bottom: 2px solid ${Colors.primary[300]};
+  padding: 14px 10px;
+  background: ${Colors.primary[100]};
+  color: ${Colors.primary[600]};
   text-align: left;
+  font-size: 1rem;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  transition: background 0.2s;
 `;
 
-const StyledTd = styled.td`
-  border: 1px solid #ddd;
-  padding: 8px;
+const StyledTd = styled.td<{ zebra?: boolean }>`
+  border-bottom: 1px solid ${Colors.border};
+  padding: 12px 10px;
+  background: ${({ zebra }) => (zebra ? Colors.primary[100] : Colors.surface)};
+  color: ${Colors.text};
+  font-size: 0.98rem;
+  transition: background 0.2s;
+`;
+
+const TableRow = styled.tr`
+  transition: background 0.18s;
+  &:hover td {
+    background: ${Colors.primary[200]};
+  }
 `;
 
 const PaginationWrapper = styled.div`
@@ -49,11 +76,20 @@ const PaginationWrapper = styled.div`
 `;
 
 const PaginationButton = styled.button`
-  padding: 6px 12px;
-  border: 1px solid #ddd;
-  background: #fff;
+  padding: 8px 18px;
+  border: 1.5px solid ${Colors.primary[300]};
+  background: ${Colors.primary[100]};
+  color: ${Colors.primary[600]};
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 4px;
+  box-shadow: 0 2px 8px 0 ${Colors.primary[100]};
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  &:hover:not(:disabled) {
+    background: ${Colors.primary[200]};
+    color: ${Colors.primary[500]};
+    border: 1.5px solid ${Colors.primary[400]};
+  }
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -62,13 +98,17 @@ const PaginationButton = styled.button`
 
 const PAGE_SIZE = 10;
 
+type FieldValueObject = {
+  [key: string]: string | number | boolean | undefined;
+};
+
 function CustomTable<T extends { id?: string | number }>({
   columns,
   rows,
 }: CustomTableProps<T>) {
   // Grouping filter state
   const [groupFilters, setGroupFilters] = useState<{
-    [field: string]: Set<any>;
+    [field: string]: Set<FieldValue>;
   }>({});
   const [openGroupPopup, setOpenGroupPopup] = useState<string | null>(null);
   const groupPopupRef = useRef<HTMLDivElement | null>(null);
@@ -83,7 +123,9 @@ function CustomTable<T extends { id?: string | number }>({
     // Grouping filter
     Object.entries(groupFilters).forEach(([field, values]) => {
       if (values.size > 0) {
-        result = result.filter((row) => values.has((row as any)[field]));
+        result = result.filter((row) =>
+          values.has((row as FieldValueObject)[field] as FieldValue)
+        );
       }
     });
     // Search filter
@@ -91,7 +133,7 @@ function CustomTable<T extends { id?: string | number }>({
     const lower = search.trim().toLowerCase();
     return result.filter((row) =>
       columns.some((col) => {
-        let value = (row as any)[col.field];
+        let value = (row as FieldValueObject)[col.field] as FieldValue;
         if (col.valueGetter) {
           value = col.valueGetter(value, row);
         }
@@ -103,14 +145,15 @@ function CustomTable<T extends { id?: string | number }>({
   }, [rows, columns, search, groupFilters]);
   // Benzersiz grup değerlerini bul
   const getUniqueGroupValues = (field: string) => {
-    const values = new Set<any>();
+    const values = new Set<FieldValue>();
     rows.forEach((row) => {
-      values.add((row as any)[field]);
+      values.add((row as FieldValueObject)[field] as FieldValue);
     });
     return Array.from(values);
   };
 
   // Popup dışında tıklama ile kapatma
+
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -122,24 +165,25 @@ function CustomTable<T extends { id?: string | number }>({
     }
     if (openGroupPopup) {
       document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
     }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, [openGroupPopup]);
 
-  // Sıralama fonksiyonu
+  // Sıralama fonksiyonu ve sayfalama
   const sortedRows = React.useMemo(() => {
     if (!sortField) return filteredRows;
     const col = columns.find((c) => c.field === sortField);
     if (!col) return filteredRows;
-    const sorted = [...filteredRows].sort((a, b) => {
-      let aValue = (a as any)[sortField];
-      let bValue = (b as any)[sortField];
+    return [...filteredRows].sort((a, b) => {
+      let aValue = (a as FieldValueObject)[col.field] as FieldValue;
+      let bValue = (b as FieldValueObject)[col.field] as FieldValue;
       if (col.valueGetter) {
         aValue = col.valueGetter(aValue, a);
         bValue = col.valueGetter(bValue, b);
       }
+      if (aValue === bValue) return 0;
       if (aValue == null) return 1;
       if (bValue == null) return -1;
       if (typeof aValue === "number" && typeof bValue === "number") {
@@ -149,7 +193,6 @@ function CustomTable<T extends { id?: string | number }>({
         ? String(aValue).localeCompare(String(bValue))
         : String(bValue).localeCompare(String(aValue));
     });
-    return sorted;
   }, [filteredRows, sortField, sortDirection, columns]);
 
   const pageCount = Math.ceil(sortedRows.length / PAGE_SIZE);
@@ -158,21 +201,19 @@ function CustomTable<T extends { id?: string | number }>({
     (page + 1) * PAGE_SIZE
   );
 
-  const handlePrev = () => setPage((p) => Math.max(0, p - 1));
-  const handleNext = () => setPage((p) => Math.min(pageCount - 1, p + 1));
-
-  // Sıralama başlık tıklama
   const handleSort = (field: string, sortable?: boolean) => {
-    // sortable false ise sıralama kapalı
     if (sortable === false) return;
     if (sortField === field) {
-      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortField(field);
       setSortDirection("asc");
     }
     setPage(0);
   };
+
+  const handlePrev = () => setPage((p) => Math.max(0, p - 1));
+  const handleNext = () => setPage((p) => Math.min(pageCount - 1, p + 1));
 
   // Arama inputu değişince sayfa başa alınır
   React.useEffect(() => {
@@ -262,7 +303,7 @@ function CustomTable<T extends { id?: string | number }>({
                       </div>
                       {getUniqueGroupValues(col.field).map((val) => (
                         <label
-                          key={val}
+                          key={String(val)}
                           style={{ display: "block", marginBottom: 4 }}
                         >
                           <input
@@ -311,20 +352,31 @@ function CustomTable<T extends { id?: string | number }>({
         </thead>
         <tbody>
           {paginatedRows.map((row, rowIndex) => (
-            <tr key={(row.id as string | number) ?? rowIndex}>
+            <TableRow key={(row.id as string | number) ?? rowIndex}>
               {columns.map((col) => {
-                let value = (row as any)[col.field];
-                if (col.valueGetter) {
-                  value = col.valueGetter((row as any)[col.field], row);
+                if (col.renderCell) {
+                  return (
+                    <StyledTd zebra={rowIndex % 2 === 1} key={col.field}>
+                      {col.renderCell(row)}
+                    </StyledTd>
+                  );
                 }
-                return <StyledTd key={col.field}>{value}</StyledTd>;
+                let value = (row as FieldValueObject)[col.field] as FieldValue;
+                if (col.valueGetter) {
+                  value = col.valueGetter(value, row);
+                }
+                return (
+                  <StyledTd zebra={rowIndex % 2 === 1} key={col.field}>
+                    {value}
+                  </StyledTd>
+                );
               })}
-            </tr>
+            </TableRow>
           ))}
         </tbody>
       </StyledTable>
       {/* Seçili grup filtreleri gösterimi */}
-      {Object.entries(groupFilters).some(([_, set]) => set.size > 0) && (
+      {Object.entries(groupFilters).some(([, set]) => set.size > 0) && (
         <div style={{ margin: "12px 0", color: "#555" }}>
           <b>Filtreler:</b>
           {Object.entries(groupFilters).map(

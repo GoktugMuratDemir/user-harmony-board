@@ -1,5 +1,7 @@
 import React from "react";
+
 import styled from "styled-components";
+import Colors from "../Styles/Colors";
 
 interface CustomModalProps {
   isOpen: boolean;
@@ -15,7 +17,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(24, 24, 27, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,10 +25,10 @@ const Overlay = styled.div`
 `;
 
 const ModalContainer = styled.div<{ width?: string; height?: string }>`
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
-  padding: 24px;
+  background: ${Colors.surface};
+  border-radius: 12px;
+  box-shadow: 0 2px 16px 0 ${Colors.border};
+  padding: 28px;
   min-width: 320px;
   width: ${({ width }) => width || "400px"};
   height: ${({ height }) => height || "auto"};
@@ -37,10 +39,21 @@ const CloseButton = styled.button`
   position: absolute;
   top: 12px;
   right: 12px;
-  background: transparent;
+  background: ${Colors.danger[100]};
+  color: ${Colors.danger[600]};
   border: none;
+  border-radius: 50%;
   font-size: 1.5rem;
   cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  &:hover {
+    background: ${Colors.danger[200]};
+  }
 `;
 
 const CustomModal: React.FC<CustomModalProps> = ({

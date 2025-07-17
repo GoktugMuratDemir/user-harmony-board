@@ -1,5 +1,6 @@
 import React from "react";
 import { useFormContext } from "../../Context/FormContext";
+import CustomSelect from "../CustomSelect";
 
 interface Option {
   value: string;
@@ -21,21 +22,25 @@ const FormSelect: React.FC<FormSelectProps> = ({ label, name, options }) => {
 
   return (
     <div style={{ marginBottom: 15 }}>
-      <label style={{ display: "block", marginBottom: 5 }}>{label}</label>
-      <select
+      <CustomSelect
+        label={label}
         name={name}
         value={values[name] || ""}
         onChange={handleChange}
-        style={{ width: "100%", padding: 8, boxSizing: "border-box" }}
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+        options={options}
+        variant="outlined"
+      />
       {errors[name] && (
-        <span style={{ color: "red", fontSize: 12 }}>{errors[name]}</span>
+        <span
+          style={{
+            color: "#e53935",
+            fontSize: 12,
+            marginTop: 4,
+            display: "block",
+          }}
+        >
+          {errors[name]}
+        </span>
       )}
     </div>
   );

@@ -98,13 +98,13 @@ const UserList: React.FC = () => {
             <CustomButton
               text="Tablo Görünümü"
               onClick={() => setViewMode("table")}
-              variant="contained"
+              variant={viewMode === "table" ? "contained" : "outlined"}
               active={viewMode === "table"}
             />
             <CustomButton
               text="Kart Görünümü"
               onClick={() => setViewMode("card")}
-              variant="contained"
+              variant={viewMode === "card" ? "contained" : "outlined"}
               active={viewMode === "card"}
             />
           </div>

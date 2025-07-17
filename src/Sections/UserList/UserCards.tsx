@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 // import { FaUserCircle } from "react-icons/fa";
 
 import styled from "styled-components";
@@ -6,7 +6,11 @@ import Colors from "../../Styles/Colors";
 
 import { Link } from "react-router-dom";
 import CustomTextField from "../../components/CustomTextField";
+
+import CustomSelect from "../../components/CustomSelect";
+
 import type { User } from "../../types/types";
+import { useUserCards } from "../../hooks/Users/UserList/useUserCards";
 
 const CardsContainer = styled.div`
   display: grid;
@@ -99,6 +103,23 @@ const DetailButton = styled(Link)`
   }
 `;
 
+const UserAvatar = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(
+    135deg,
+    ${Colors.primary[400]} 60%,
+    ${Colors.primary[200]} 100%
+  );
+  border-radius: 50%;
+  box-shadow: 0 2px 10px 0 ${Colors.primary[100]};
+`;
+
 const Pagination = styled.div`
   display: flex;
   justify-content: center;
@@ -127,6 +148,46 @@ const Pagination = styled.div`
   }
 `;
 
+const FilterSortBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 18px;
+  align-items: center;
+  margin-y: 18px;
+  justify-content: center;
+`;
+
+const SearchFieldWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+`;
+
+const SearchLabel = styled.label`
+  font-size: 0.95rem;
+  color: ${Colors.primary[600]};
+  margin-bottom: 2px;
+`;
+
+const StyledTextField = styled(CustomTextField)`
+  font-size: 1rem;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: ${Colors.surface};
+  border: 1.5px solid ${Colors.primary[200]};
+  color: ${Colors.text};
+  box-shadow: 0 2px 8px 0 ${Colors.primary[100]};
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s;
+  width: 100%;
+  &:focus {
+    border-color: ${Colors.primary[500]};
+    outline: none;
+    box-shadow: 0 4px 16px 0 ${Colors.primary[200]};
+  }
+`;
+
 interface UserCardsProps {
   users: User[];
   paginationMode: "paginated" | "all";
@@ -134,74 +195,105 @@ interface UserCardsProps {
   setSearchTerm: (term: string) => void;
 }
 
+const sortOptions = [
+  { value: "name", label: "İsme Göre (A-Z)" },
+  { value: "createdAt", label: "Oluşturulma Tarihi" },
+];
+
+const orderOptions = [
+  { value: "asc", label: "Artan" },
+  { value: "desc", label: "Azalan" },
+];
+
 const UserCards: React.FC<UserCardsProps> = ({
   users,
   paginationMode,
   searchTerm,
   setSearchTerm,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
-  const totalPages = Math.ceil(users.length / itemsPerPage);
-  const paginatedUsers =
-    paginationMode === "paginated"
-      ? users.slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        )
-      : users;
+  const {
+    currentPage,
+    setCurrentPage,
+    filterRole,
+    setFilterRole,
+    sortKey,
+    setSortKey,
+    sortOrder,
+    setSortOrder,
+    roleOptions,
+    paginatedUsers,
+    totalPages,
+  } = useUserCards(users);
 
   return (
     <div>
-      <CustomTextField
-        placeholder="Ara..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        variant="outlined"
-      />
+      <FilterSortBar>
+        <SearchFieldWrapper>
+          <SearchLabel htmlFor="user-search-input">Ara</SearchLabel>
+          <StyledTextField
+            id="user-search-input"
+            placeholder="Ara..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            variant="outlined"
+          />
+        </SearchFieldWrapper>
+        <CustomSelect
+          value={filterRole}
+          onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
+            setFilterRole(e.target.value as string)
+          }
+          options={roleOptions}
+          label="Rol"
+        />
+        <CustomSelect
+          value={sortKey}
+          onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
+            setSortKey(e.target.value as string)
+          }
+          options={sortOptions}
+          label="Sırala"
+        />
+        <CustomSelect
+          value={sortOrder}
+          onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
+            setSortOrder(e.target.value as string)
+          }
+          options={orderOptions}
+          label="Sıra"
+        />
+      </FilterSortBar>
       <CardsContainer>
-        {paginatedUsers.map((user: User) => (
-          <Card key={user.id}>
-            <div
-              style={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 16,
-                width: 54,
-                height: 54,
-                background: `linear-gradient(135deg, ${Colors.primary[400]} 60%, ${Colors.primary[200]} 100%)`,
-                borderRadius: "50%",
-                boxShadow: `0 2px 10px 0 ${Colors.primary[100]}`,
-              }}
-            >
-              <span
-                style={{
-                  fontWeight: 900,
-                  fontSize: "2rem",
-                  color: Colors.surface,
-                  letterSpacing: "1px",
-                  userSelect: "none",
-                }}
-              >
-                {user.name?.[0]?.toUpperCase()}
-              </span>
-            </div>
-            <CardHeader>{user.name}</CardHeader>
-            <CardField>
-              <strong>Email:</strong> {user.email}
-            </CardField>
-            <CardField>
-              <strong>Rol:</strong> {user.role}
-            </CardField>
-            <CardField>
-              <strong>Oluşturulma Tarihi:</strong>{" "}
-              {new Date(user.createdAt).toLocaleDateString()}
-            </CardField>
-            <DetailButton to={`/users/${user.id}`}>Detaylar</DetailButton>
-          </Card>
-        ))}
+        {paginatedUsers &&
+          paginatedUsers.map((user: User) => (
+            <Card key={user.id}>
+              <UserAvatar>
+                <span
+                  style={{
+                    fontWeight: 900,
+                    fontSize: "2rem",
+                    color: Colors.surface,
+                    letterSpacing: "1px",
+                    userSelect: "none",
+                  }}
+                >
+                  {user.name?.[0]?.toUpperCase()}
+                </span>
+              </UserAvatar>
+              <CardHeader>{user.name}</CardHeader>
+              <CardField>
+                <strong>Email:</strong> {user.email}
+              </CardField>
+              <CardField>
+                <strong>Rol:</strong> {user.role}
+              </CardField>
+              <CardField>
+                <strong>Oluşturulma Tarihi:</strong>{" "}
+                {new Date(user.createdAt).toLocaleDateString()}
+              </CardField>
+              <DetailButton to={`/users/${user.id}`}>Detaylar</DetailButton>
+            </Card>
+          ))}
       </CardsContainer>
 
       {paginationMode === "paginated" && (

@@ -6,6 +6,7 @@ import Colors from "../../Styles/Colors";
 
 import { Link } from "react-router-dom";
 import CustomTextField from "../../components/CustomTextField";
+import CustomButton from "../../components/CustomButton";
 
 import CustomSelect from "../../components/CustomSelect";
 
@@ -190,9 +191,6 @@ const StyledTextField = styled(CustomTextField)`
 
 interface UserCardsProps {
   users: User[];
-  paginationMode: "paginated" | "all";
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
 }
 
 const sortOptions = [
@@ -205,12 +203,7 @@ const orderOptions = [
   { value: "desc", label: "Azalan" },
 ];
 
-const UserCards: React.FC<UserCardsProps> = ({
-  users,
-  paginationMode,
-  searchTerm,
-  setSearchTerm,
-}) => {
+const UserCards: React.FC<UserCardsProps> = ({ users }) => {
   const {
     currentPage,
     setCurrentPage,
@@ -220,6 +213,10 @@ const UserCards: React.FC<UserCardsProps> = ({
     setSortKey,
     sortOrder,
     setSortOrder,
+    searchTerm,
+    setSearchTerm,
+    paginationMode,
+    setPaginationMode,
     roleOptions,
     paginatedUsers,
     totalPages,
@@ -261,6 +258,15 @@ const UserCards: React.FC<UserCardsProps> = ({
           }
           options={orderOptions}
           label="Sıra"
+        />
+        <CustomButton
+          text={
+            paginationMode === "paginated" ? "Tümünü Göster" : "Sayfalandır"
+          }
+          onClick={() =>
+            setPaginationMode((p) => (p === "paginated" ? "all" : "paginated"))
+          }
+          variant="outlined"
         />
       </FilterSortBar>
       <CardsContainer>

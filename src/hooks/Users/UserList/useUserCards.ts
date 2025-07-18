@@ -6,6 +6,10 @@ export function useUserCards(users: User[]) {
   const [filterRole, setFilterRole] = useState<string>("all");
   const [sortKey, setSortKey] = useState<string>("name");
   const [sortOrder, setSortOrder] = useState<string>("asc");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [paginationMode, setPaginationMode] = useState<"paginated" | "all">(
+    "paginated"
+  );
 
   // Rolleri dinamik olarak çıkar
   const roleOptions = useMemo(() => {
@@ -22,9 +26,22 @@ export function useUserCards(users: User[]) {
   // Filtreleme ve sıralama
   const processedUsers = useMemo(() => {
     let filtered = users;
+
+    // Arama filtresi
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (user) =>
+          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.role.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Rol filtresi
     if (filterRole !== "all") {
       filtered = filtered.filter((u) => u.role === filterRole);
     }
+
     const sorted = [...filtered];
     sorted.sort((a, b) => {
       let aVal: string | number = "";
@@ -45,16 +62,20 @@ export function useUserCards(users: User[]) {
       return 0;
     });
     return sorted;
-  }, [users, filterRole, sortKey, sortOrder]);
+  }, [users, searchTerm, filterRole, sortKey, sortOrder]);
 
   const itemsPerPage = 12;
   const totalPages = Math.ceil(processedUsers.length / itemsPerPage);
-  const paginatedUsers =
-    processedUsers.length &&
-    processedUsers.slice(
+
+  const paginatedUsers = useMemo(() => {
+    if (paginationMode === "all") {
+      return processedUsers;
+    }
+    return processedUsers.slice(
       (currentPage - 1) * itemsPerPage,
       currentPage * itemsPerPage
     );
+  }, [processedUsers, currentPage, itemsPerPage, paginationMode]);
 
   return {
     currentPage,
@@ -65,6 +86,10 @@ export function useUserCards(users: User[]) {
     setSortKey,
     sortOrder,
     setSortOrder,
+    searchTerm,
+    setSearchTerm,
+    paginationMode,
+    setPaginationMode,
     roleOptions,
     processedUsers,
     paginatedUsers,

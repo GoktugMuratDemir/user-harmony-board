@@ -15,8 +15,11 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
     {
       field: "createdAt",
       headerName: "Oluşturulma Tarihi",
-      valueGetter: (value: string | number | Date) => {
-        const d = new Date(value);
+      valueGetter: (
+        _value: string | number | boolean | undefined,
+        row: User
+      ) => {
+        const d = new Date(row.createdAt);
         return isNaN(d.getTime()) ? "-" : d.toLocaleDateString();
       },
     },

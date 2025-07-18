@@ -6,10 +6,6 @@ export function useUserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [showModal, setShowModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [paginationMode, setPaginationMode] = useState<"paginated" | "all">(
-    "paginated"
-  );
 
   useEffect(() => {
     const storedUsers = localStorage.getItem("users");
@@ -33,13 +29,6 @@ export function useUserList() {
     setShowModal(false);
   };
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return {
     users,
     setUsers,
@@ -47,11 +36,6 @@ export function useUserList() {
     setViewMode,
     showModal,
     setShowModal,
-    searchTerm,
-    setSearchTerm,
-    paginationMode,
-    setPaginationMode,
     handleAddUser,
-    filteredUsers,
   };
 }

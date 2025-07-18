@@ -73,16 +73,12 @@ const CustomModalBlur = styled(CustomModal)`
 
 const UserList: React.FC = () => {
   const {
+    users,
     viewMode,
     setViewMode,
     showModal,
     setShowModal,
-    searchTerm,
-    setSearchTerm,
-    paginationMode,
-    setPaginationMode,
     handleAddUser,
-    filteredUsers,
   } = useUserList();
 
   return (
@@ -109,21 +105,6 @@ const UserList: React.FC = () => {
             />
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            {viewMode === "card" && (
-              <CustomButton
-                text={
-                  paginationMode === "paginated"
-                    ? "Tümünü Göster"
-                    : "Sayfalandır"
-                }
-                onClick={() =>
-                  setPaginationMode((p) =>
-                    p === "paginated" ? "all" : "paginated"
-                  )
-                }
-                variant="outlined"
-              />
-            )}
             <CustomButton
               text="+ Kullanıcı Ekle"
               onClick={() => setShowModal(true)}
@@ -132,14 +113,9 @@ const UserList: React.FC = () => {
           </div>
         </Toolbar>
         {viewMode === "table" ? (
-          <UserTable users={filteredUsers} />
+          <UserTable users={users} />
         ) : (
-          <UserCards
-            users={filteredUsers}
-            paginationMode={paginationMode}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-          />
+          <UserCards users={users} />
         )}
         <CustomModalBlur
           isOpen={showModal}

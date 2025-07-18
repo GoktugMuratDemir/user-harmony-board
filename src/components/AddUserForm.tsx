@@ -25,6 +25,7 @@
 
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import styled from "styled-components";
 import type { User } from "../types/types";
 import { FormProvider } from "./Form/FormProvider";
 import FormTextField from "./Form/FormTextField";
@@ -34,6 +35,59 @@ import * as yup from "yup";
 
 import CustomButton from "./CustomButton";
 import Colors from "../Styles/Colors";
+
+// Styled Components
+const FormContainer = styled.div`
+  background: ${Colors.surface};
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 ${Colors.primary[100]};
+  border: 1.5px solid ${Colors.border};
+  padding: 0;
+  min-width: 320px;
+  overflow: hidden;
+`;
+
+const FormHeader = styled.div`
+  background: ${Colors.primary[500]};
+  color: ${Colors.textLight};
+  padding: 22px 28px 12px 28px;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const HeaderIcon = styled.svg`
+  width: 28px;
+  height: 28px;
+  fill: none;
+`;
+
+const IconCircle = styled.circle`
+  fill: ${Colors.primary[400]};
+`;
+
+const IconPath = styled.path`
+  fill: ${Colors.textLight};
+`;
+
+const HeaderTitle = styled.span`
+  font-weight: 800;
+  font-size: 1.18rem;
+  letter-spacing: 0.01;
+`;
+
+const FormContent = styled.div`
+  padding: 28px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 28px;
+`;
 
 /**
  * AddUserForm bileşeninin props interface'i
@@ -148,47 +202,19 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onClose, onAddUser }) => {
   };
 
   return (
-    <div
-      style={{
-        background: Colors.surface,
-        borderRadius: 18,
-        boxShadow: `0 4px 24px 0 ${Colors.primary[100]}`,
-        border: `1.5px solid ${Colors.border}`,
-        padding: 0,
-        minWidth: 320,
-        overflow: "hidden",
-      }}
-    >
+    <FormContainer>
       {/* Form başlık alanı */}
-      <div
-        style={{
-          background: Colors.primary[500],
-          color: Colors.textLight,
-          padding: "22px 28px 12px 28px",
-          borderTopLeftRadius: 18,
-          borderTopRightRadius: 18,
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-        }}
-      >
+      <FormHeader>
         {/* Kullanıcı ikonu */}
-        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="12" fill={Colors.primary[400]} />
-          <path
-            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-            fill={Colors.textLight}
-          />
-        </svg>
-        <span
-          style={{ fontWeight: 800, fontSize: "1.18rem", letterSpacing: 0.01 }}
-        >
-          Yeni Kullanıcı Ekle
-        </span>
-      </div>
+        <HeaderIcon viewBox="0 0 24 24">
+          <IconCircle cx="12" cy="12" r="12" />
+          <IconPath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+        </HeaderIcon>
+        <HeaderTitle>Yeni Kullanıcı Ekle</HeaderTitle>
+      </FormHeader>
 
       {/* Form içerik alanı */}
-      <div style={{ padding: 28 }}>
+      <FormContent>
         <FormProvider
           schema={schema}
           initialValues={initialValues}
@@ -203,14 +229,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onClose, onAddUser }) => {
             <FormCheckbox label="Aktif" name="active" />
 
             {/* Form butonları */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: 14,
-                marginTop: 28,
-              }}
-            >
+            <ButtonContainer>
               {/* İptal butonu */}
               <CustomButton
                 type="button"
@@ -220,11 +239,11 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onClose, onAddUser }) => {
               />
               {/* Kaydet butonu */}
               <CustomButton type="submit" variant="contained" text="Kaydet" />
-            </div>
+            </ButtonContainer>
           </form>
         </FormProvider>
-      </div>
-    </div>
+      </FormContent>
+    </FormContainer>
   );
 };
 

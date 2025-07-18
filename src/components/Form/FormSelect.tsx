@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { useFormContext } from "../../Context/FormContext";
 import CustomSelect from "../CustomSelect";
 
@@ -13,6 +14,17 @@ interface FormSelectProps {
   options: Option[];
 }
 
+const FormContainer = styled.div`
+  margin-bottom: 15px;
+`;
+
+const ErrorMessage = styled.span`
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+`;
+
 const FormSelect: React.FC<FormSelectProps> = ({ label, name, options }) => {
   const { values, setFieldValue, errors } = useFormContext<string>();
 
@@ -21,7 +33,7 @@ const FormSelect: React.FC<FormSelectProps> = ({ label, name, options }) => {
   };
 
   return (
-    <div style={{ marginBottom: 15 }}>
+    <FormContainer>
       <CustomSelect
         label={label}
         name={name}
@@ -30,19 +42,8 @@ const FormSelect: React.FC<FormSelectProps> = ({ label, name, options }) => {
         options={options}
         variant="outlined"
       />
-      {errors[name] && (
-        <span
-          style={{
-            color: "#e53935",
-            fontSize: 12,
-            marginTop: 4,
-            display: "block",
-          }}
-        >
-          {errors[name]}
-        </span>
-      )}
-    </div>
+      {errors[name] && <ErrorMessage>{errors[name]}</ErrorMessage>}
+    </FormContainer>
   );
 };
 

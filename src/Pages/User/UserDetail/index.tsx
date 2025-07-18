@@ -122,6 +122,40 @@ const MapWrapper = styled.div`
 `;
 
 /**
+ * Durum Span
+ * Kullanıcının aktif/pasif durumunu gösteren styled component
+ */
+const StatusSpan = styled.span<{ $active: boolean }>`
+  color: ${({ $active }) =>
+    $active ? Colors.primary[600] : Colors.primary[200]};
+  font-weight: 700;
+`;
+
+/**
+ * Konum Başlık Container
+ * Konum başlığını içeren container
+ */
+const LocationHeader = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 8px;
+`;
+
+/**
+ * Konum Başlığı
+ * Konum başlık text'i
+ */
+const LocationTitle = styled.h3`
+  margin: 0;
+  color: ${Colors.primary[600]};
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.2px;
+`;
+
+/**
  * Kullanıcı Detay Bileşeni
  *
  * URL parametresinden ID alarak ilgili kullanıcının detaylarını gösterir.
@@ -198,39 +232,16 @@ const UserDetail: React.FC = () => {
           </p>
           <p>
             <b>Durum:</b>{" "}
-            <span
-              style={{
-                color: user.active ? Colors.primary[600] : Colors.primary[200],
-                fontWeight: 700,
-              }}
-            >
+            <StatusSpan $active={user.active}>
               {user.active ? "Aktif" : "Pasif"}
-            </span>
+            </StatusSpan>
           </p>
         </UserInfo>
 
         {/* Konum Başlığı */}
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            marginBottom: 8,
-          }}
-        >
-          <h3
-            style={{
-              margin: 0,
-              color: Colors.primary[600],
-              fontWeight: 700,
-              fontSize: "1.2rem",
-              letterSpacing: 0.2,
-            }}
-          >
-            Konum
-          </h3>
-        </div>
+        <LocationHeader>
+          <LocationTitle>Konum</LocationTitle>
+        </LocationHeader>
 
         {/* Leaflet Harita */}
         <MapWrapper>

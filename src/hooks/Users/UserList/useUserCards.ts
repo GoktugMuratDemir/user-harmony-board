@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { User } from "../../../types/types";
 
 export function useUserCards(users: User[]) {
@@ -10,6 +10,13 @@ export function useUserCards(users: User[]) {
   const [paginationMode, setPaginationMode] = useState<"paginated" | "all">(
     "paginated"
   );
+  // Infinite scroll için gösterilecek item sayısı
+  const [visibleItemsCount, setVisibleItemsCount] = useState(10);
+
+  // Filtre veya arama değiştiğinde visible item count'u resetle
+  useEffect(() => {
+    setVisibleItemsCount(10);
+  }, [searchTerm, filterRole, sortKey, sortOrder]);
 
   // Rolleri dinamik olarak çıkar
   const roleOptions = useMemo(() => {
@@ -69,13 +76,38 @@ export function useUserCards(users: User[]) {
 
   const paginatedUsers = useMemo(() => {
     if (paginationMode === "all") {
-      return processedUsers;
+      // Infinite scroll modunda sadece visibleItemsCount kadar göster
+      return processedUsers.slice(0, visibleItemsCount);
     }
     return processedUsers.slice(
       (currentPage - 1) * itemsPerPage,
       currentPage * itemsPerPage
     );
-  }, [processedUsers, currentPage, itemsPerPage, paginationMode]);
+  }, [
+    processedUsers,
+    currentPage,
+    itemsPerPage,
+    paginationMode,
+    visibleItemsCount,
+  ]);
+
+  // Infinite scroll için daha fazla veri yükleme fonksiyonu
+  const loadMoreItems = () => {
+    if (paginationMode === "all" && visibleItemsCount < processedUsers.length) {
+      setVisibleItemsCount((prev) =>
+        Math.min(prev + 10, processedUsers.length)
+      );
+    }
+  };
+
+  // Filtre veya arama değiştiğinde visible item count'u resetle
+  const resetVisibleItems = () => {
+    setVisibleItemsCount(10);
+  };
+
+  // Tüm kullanıcıları gösterme durumu
+  const hasMoreItems =
+    paginationMode === "all" && visibleItemsCount < processedUsers.length;
 
   return {
     currentPage,
@@ -95,5 +127,10 @@ export function useUserCards(users: User[]) {
     paginatedUsers,
     itemsPerPage,
     totalPages,
+    // Infinite scroll için yeni özellikler
+    loadMoreItems,
+    resetVisibleItems,
+    hasMoreItems,
+    visibleItemsCount,
   };
 }

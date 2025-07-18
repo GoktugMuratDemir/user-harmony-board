@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 // import { FaUserCircle } from "react-icons/fa";
 
 import styled from "styled-components";
@@ -220,10 +220,44 @@ const UserCards: React.FC<UserCardsProps> = ({ users }) => {
     roleOptions,
     paginatedUsers,
     totalPages,
+    // Infinite scroll için yeni özellikler
+    loadMoreItems,
+    hasMoreItems,
   } = useUserCards(users);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Infinite scroll için scroll event listener
+  useEffect(() => {
+    if (paginationMode !== "all") return;
+
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+      const isScrolledToBottom = scrollTop + clientHeight >= scrollHeight - 200; // 200px önden tetikle
+
+      if (isScrolledToBottom && hasMoreItems) {
+        loadMoreItems();
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [paginationMode, hasMoreItems, loadMoreItems]);
+
   return (
-    <div>
+    <div
+      ref={containerRef}
+      style={{
+        maxHeight: paginationMode === "all" ? "70vh" : "none",
+        overflowY: paginationMode === "all" ? "auto" : "visible",
+        padding: paginationMode === "all" ? "0 32px" : "0",
+      }}
+    >
       <FilterSortBar>
         <SearchFieldWrapper>
           <SearchLabel htmlFor="user-search-input">Ara</SearchLabel>
@@ -301,6 +335,20 @@ const UserCards: React.FC<UserCardsProps> = ({ users }) => {
             </Card>
           ))}
       </CardsContainer>
+
+      {/* Infinite scroll loading indicator */}
+      {paginationMode === "all" && hasMoreItems && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "20px",
+            color: Colors.primary[600],
+            fontSize: "0.9rem",
+          }}
+        >
+          Daha fazla yükleniyor...
+        </div>
+      )}
 
       {paginationMode === "paginated" && (
         <Pagination>

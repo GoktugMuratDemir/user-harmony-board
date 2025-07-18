@@ -1,7 +1,30 @@
+/**
+ * Header.tsx - Dashboard Üst Başlık Bileşeni
+ *
+ * Bu bileşen uygulamanın üst kısmında yer alan header alanını oluşturur.
+ * Logo, başlık ve navigasyon butonlarını içerir.
+ *
+ * Özellikler:
+ * - Gradient arka plan rengi
+ * - Sticky konumlandırma (sayfa kaydırıldığında üstte kalır)
+ * - Geri/İleri navigasyon butonları
+ * - Responsive tasarım
+ * - Modern gölge efektleri
+ *
+ * Styled Components kullanılarak CSS-in-JS yaklaşımı benimsenmiştir.
+ *
+ * @component
+ * @returns {JSX.Element} Header bileşeni
+ */
+
 import styled from "styled-components";
 import Colors from "../Styles/Colors";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Ana header container'ı
+ * Gradient arka plan ve sticky konumlandırma ile tasarlanmıştır
+ */
 const StyledHeader = styled.header`
   width: 100%;
   height: 68px;
@@ -23,6 +46,10 @@ const StyledHeader = styled.header`
   z-index: 100;
 `;
 
+/**
+ * Logo container'ı
+ * Dairesel gradient arka plan ile şirket logosunu temsil eder
+ */
 const Logo = styled.div`
   width: 40px;
   height: 40px;
@@ -44,6 +71,10 @@ const Logo = styled.div`
   letter-spacing: 1px;
 `;
 
+/**
+ * Ana başlık elementi
+ * Dashboard yazısını stilize eder
+ */
 const Title = styled.h1`
   margin: 0;
   font-size: 1.7rem;
@@ -53,12 +84,20 @@ const Title = styled.h1`
   text-shadow: 0 2px 8px ${Colors.primary[200]};
 `;
 
+/**
+ * Navigasyon butonları container'ı
+ * Geri/İleri butonlarını düzenler
+ */
 const NavBtns = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
 `;
 
+/**
+ * Navigasyon butonu stili
+ * Dairesel tasarım ve hover efektleri içerir
+ */
 const NavBtn = styled.button`
   background: ${Colors.textLight};
   color: ${Colors.primary[600]};
@@ -74,6 +113,7 @@ const NavBtn = styled.button`
   cursor: pointer;
   box-shadow: 0 2px 8px 0 ${Colors.primary[200]};
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+
   &:hover {
     background: ${Colors.primary[400]};
     color: ${Colors.textLight};
@@ -81,18 +121,33 @@ const NavBtn = styled.button`
   }
 `;
 
+/**
+ * Header Ana Bileşeni
+ *
+ * Dashboard'un üst kısmında yer alır ve navigasyon imkanı sağlar.
+ * React Router'ın useNavigate hook'u ile sayfa navigasyonu yapılır.
+ *
+ * @returns {JSX.Element} Header bileşeni
+ */
 const Header = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Sayfa navigasyonu için React Router hook'u
+
   return (
     <StyledHeader>
+      {/* Sol taraf: Logo ve başlık */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <Logo>E</Logo>
+        <Logo>E</Logo> {/* Evreka logosu */}
         <Title>Dashboard</Title>
       </div>
+
+      {/* Sağ taraf: Navigasyon butonları */}
       <NavBtns>
+        {/* Geri butonu */}
         <NavBtn onClick={() => navigate(-1)} title="Geri">
           <span style={{ fontSize: "1.5rem", fontWeight: 700 }}>←</span>
         </NavBtn>
+
+        {/* İleri butonu */}
         <NavBtn onClick={() => navigate(1)} title="İleri">
           <span style={{ fontSize: "1.5rem", fontWeight: 700 }}>→</span>
         </NavBtn>

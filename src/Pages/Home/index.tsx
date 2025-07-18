@@ -1,6 +1,33 @@
+/**
+ * Home/index.tsx - Ana Sayfa Bileşeni
+ *
+ * Bu bileşen uygulamanın ana sayfasını oluşturur. Kullanıcıları karşılayan
+ * hoş geldin mesajı ve açıklama metni içerir.
+ *
+ * Özellikler:
+ * - Merkezi yerleşim ve modern kart tasarımı
+ * - Gradient arka plan ve gölge efektleri
+ * - Responsive tasarım
+ * - Kullanıcı dostu açıklama metni
+ * - Modern UI bileşenleri
+ *
+ * Tasarım Elementi:
+ * - Ana kartın gradient arka planı
+ * - Büyük ev ikonu (🏠)
+ * - Hoşgeldin başlığı
+ * - Açıklayıcı metin
+ *
+ * @component
+ * @returns {JSX.Element} Ana sayfa bileşeni
+ */
+
 import styled from "styled-components";
 import Colors from "../../Styles/Colors";
 
+/**
+ * Ana sayfa arka plan container'ı
+ * Gradient arka plan ve merkezi hizalama sağlar
+ */
 const HomeBg = styled.div`
   display: flex;
   align-items: center;
@@ -12,6 +39,10 @@ const HomeBg = styled.div`
   );
 `;
 
+/**
+ * Ana içerik kartı
+ * Merkezi yerleştirilmiş modern kart tasarımı
+ */
 const HomeCard = styled.div`
   background: ${Colors.surface};
   box-shadow: 0 8px 40px 0 ${Colors.primary[200]};
@@ -27,6 +58,10 @@ const HomeCard = styled.div`
   margin-bottom: 24px;
 `;
 
+/**
+ * Ana sayfa ikonu container'ı
+ * Gradient arka plan ile büyük ikon alanı
+ */
 const HomeIcon = styled.div`
   width: 72px;
   height: 72px;
@@ -46,6 +81,10 @@ const HomeIcon = styled.div`
   box-shadow: 0 2px 12px 0 ${Colors.primary[200]};
 `;
 
+/**
+ * Ana sayfa başlığı
+ * Büyük ve vurgulu hoşgeldin mesajı
+ */
 const HomeTitle = styled.h2`
   color: ${Colors.primary[600]};
   font-size: 2.1rem;
@@ -56,6 +95,10 @@ const HomeTitle = styled.h2`
   width: 100%;
 `;
 
+/**
+ * Ana sayfa açıklama metni
+ * Kullanıcıya yol gösteren bilgilendirici metin
+ */
 const HomeDesc = styled.p`
   color: ${Colors.text};
   font-size: 1.08rem;
@@ -64,12 +107,31 @@ const HomeDesc = styled.p`
   text-align: left;
 `;
 
+/**
+ * Home Ana Bileşeni
+ *
+ * Uygulamanın ana sayfasını oluşturur. Kullanıcıları karşılar ve
+ * navigasyon hakkında bilgi verir.
+ *
+ * İçerik:
+ * - Ev ikonu (🏠)
+ * - Hoşgeldiniz başlığı
+ * - Açıklayıcı bilgilendirme metni
+ * - Modern kart tasarımı
+ *
+ * @returns {JSX.Element} Ana sayfa bileşeni
+ */
 const Home = () => {
   return (
     <HomeBg>
       <HomeCard>
+        {/* Ana sayfa ikonu */}
         <HomeIcon>🏠</HomeIcon>
+
+        {/* Hoşgeldin başlığı */}
         <HomeTitle>Hoşgeldiniz!</HomeTitle>
+
+        {/* Açıklama metni */}
         <HomeDesc>
           Burası modern ve kullanıcı dostu bir ana sayfadır. Sol menüden
           kullanıcı listesine veya diğer sayfalara geçiş yapabilirsiniz.

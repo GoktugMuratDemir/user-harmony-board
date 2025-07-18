@@ -1,20 +1,78 @@
+/**
+ * UserTable.tsx
+ *
+ * Kullanıcı Tablosu Bileşeni
+ *
+ * Bu dosya, kullanıcıları tablo formatında görüntüleyen section bileşenidir.
+ * CustomTable bileşenini kullanarak gelişmiş tablo özelliklerini sunar.
+ *
+ * Özellikler:
+ * - ✅ Kullanıcı verilerini tablo formatında gösterim
+ * - ✅ Sıralama (isim, email, rol, tarih)
+ * - ✅ Rol bazlı grup filtreleme
+ * - ✅ Arama özelliği
+ * - ✅ Sayfalama (10 kayıt/sayfa)
+ * - ✅ Detay sayfası linkli işlem sütunu
+ * - ✅ Tarih formatlaması
+ * - ✅ Modern container tasarımı
+ * - ✅ Hover efektleri
+ *
+ * Sütunlar:
+ * - Ad: Kullanıcı adı
+ * - Email: E-posta adresi
+ * - Rol: Kullanıcı rolü (grup filtrelemeli)
+ * - Oluşturulma Tarihi: Tarih formatlanmış
+ * - İşlemler: Detay sayfası linki
+ *
+ * Kullanım:
+ * ```tsx
+ * <UserTable users={allUsers} />
+ * ```
+ *
+ * @author Evreka Case Study
+ * @version 1.0.0
+ */
+
 import React from "react";
 import type { User } from "../../types/types";
 import CustomTable from "../../components/CustomTable";
 import Colors from "../../Styles/Colors";
 
+// Bileşen props interface'i
 type UserTableProps = {
-  users: User[];
+  users: User[]; // Görüntülenecek kullanıcı listesi
 };
 
+/**
+ * Kullanıcı Tablosu Ana Bileşeni
+ *
+ * CustomTable bileşenini kullanarak kullanıcı verilerini
+ * tablo formatında görüntüler. Sütun tanımları ve veri
+ * dönüştürme işlemlerini yönetir.
+ *
+ * @param users - Tablo'da gösterilecek kullanıcı listesi
+ * @returns JSX.Element - Kullanıcı tablosu bileşeni
+ */
 const UserTable: React.FC<UserTableProps> = ({ users }) => {
+  // Tablo sütun tanımları
   const columns = [
-    { field: "name", headerName: "Ad" },
-    { field: "email", headerName: "Email" },
-    { field: "role", headerName: "Rol", grouping: true },
+    {
+      field: "name",
+      headerName: "Ad", // Kullanıcı adı sütunu
+    },
+    {
+      field: "email",
+      headerName: "Email", // E-posta sütunu
+    },
+    {
+      field: "role",
+      headerName: "Rol",
+      grouping: true, // Rol bazlı grup filtreleme aktif
+    },
     {
       field: "createdAt",
       headerName: "Oluşturulma Tarihi",
+      // Tarih formatlaması için özel değer dönüştürücü
       valueGetter: (
         _value: string | number | boolean | undefined,
         row: User
@@ -25,8 +83,9 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
     },
     {
       field: "actions",
-      sortable: false,
+      sortable: false, // İşlemler sütunu sıralanamaz
       headerName: "İşlemler",
+      // Özel hücre render - detay sayfası linki
       renderCell: (row: User) => (
         <a
           href={`/users/${row.id}`}
@@ -55,6 +114,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
     },
   ];
 
+  // Kullanıcı verilerini tablo satırları formatına dönüştür
   const rows = users.map((user) => ({ ...user }));
 
   return (
@@ -71,6 +131,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
         transition: "box-shadow 0.2s, border 0.2s",
       }}
     >
+      {/* Tablo Başlığı */}
       <div
         style={{
           marginBottom: 18,
@@ -92,6 +153,8 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
           Kullanıcı Tablosu
         </span>
       </div>
+
+      {/* Ana Tablo Bileşeni */}
       <CustomTable<User> columns={columns} rows={rows} />
     </div>
   );

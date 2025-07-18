@@ -1,3 +1,29 @@
+/**
+ * UserList/index.tsx - Kullanıcı Listesi Sayfası
+ *
+ * Bu sayfa uygulamanın kullanıcı yönetim merkezidir. Kullanıcıları tablo ve
+ * kart görünümlerinde listeler, yeni kullanıcı ekleme imkanı sağlar.
+ *
+ * Özellikler:
+ * - İki farklı görünüm modu (tablo/kart)
+ * - Yeni kullanıcı ekleme modal'ı
+ * - Custom hook ile state yönetimi
+ * - Modern UI tasarımı ve responsive yapı
+ * - Toolbar ile hızlı erişim butonları
+ *
+ * Görünüm Modları:
+ * - Tablo Görünümü: Detaylı veri tablosu
+ * - Kart Görünümü: Görsel kart tasarımı
+ *
+ * Fonksiyonellikler:
+ * - Kullanıcı ekleme
+ * - Görünüm değiştirme
+ * - Modal yönetimi
+ *
+ * @component
+ * @returns {JSX.Element} Kullanıcı listesi sayfası
+ */
+
 import React from "react";
 import styled from "styled-components";
 import UserTable from "../../../Sections/UserList/UserTable";
@@ -9,6 +35,10 @@ import AddUserForm from "../../../components/AddUserForm";
 
 import Colors from "../../../Styles/Colors";
 
+/**
+ * Sayfa arka plan container'ı
+ * Gradient arka plan ve merkezi hizalama sağlar
+ */
 const Bg = styled.div`
   display: flex;
   align-items: flex-start;
@@ -21,6 +51,10 @@ const Bg = styled.div`
   overflow-x: hidden;
 `;
 
+/**
+ * Ana içerik kartı
+ * Sayfa içeriğini modern kart tasarımında sunar
+ */
 const Card = styled.div`
   background: ${Colors.surface};
   border-radius: 32px;
@@ -35,6 +69,10 @@ const Card = styled.div`
   border: 1.5px solid ${Colors.border};
 `;
 
+/**
+ * Üst toolbar alanı
+ * Görünüm değiştirme ve aksiyon butonlarını içerir
+ */
 const Toolbar = styled.div`
   display: flex;
   justify-content: space-between;
@@ -46,6 +84,11 @@ const Toolbar = styled.div`
   padding: 22px 32px;
   margin-bottom: 28px;
 `;
+
+/**
+ * Sayfa başlığı
+ * Ana başlık metni için stil
+ */
 const Title = styled.h2`
   color: ${Colors.primary[600]};
   font-size: 2.1rem;
@@ -56,6 +99,10 @@ const Title = styled.h2`
   width: 100%;
 `;
 
+/**
+ * Sayfa açıklama metni
+ * Kullanıcıya yol gösteren bilgilendirici metin
+ */
 const Description = styled.p`
   color: ${Colors.text};
   font-size: 1.08rem;
@@ -64,6 +111,10 @@ const Description = styled.p`
   text-align: left;
 `;
 
+/**
+ * Blur efektli modal
+ * Arka planda bulanıklık efekti olan özelleştirilmiş modal
+ */
 const CustomModalBlur = styled(CustomModal)`
   & .modal-backdrop {
     backdrop-filter: blur(3px);
@@ -71,32 +122,57 @@ const CustomModalBlur = styled(CustomModal)`
   }
 `;
 
+/**
+ * UserList Ana Bileşeni
+ *
+ * Kullanıcı listesini yönetir ve görüntüler. İki farklı görünüm modu
+ * (tablo/kart) destekler ve yeni kullanıcı ekleme imkanı sağlar.
+ *
+ * State Yönetimi:
+ * - useUserList custom hook'u ile merkezi state yönetimi
+ * - Kullanıcı listesi, görünüm modu ve modal durumu
+ *
+ * İnteraktif Özellikler:
+ * - Görünüm modu değiştirme (tablo/kart)
+ * - Yeni kullanıcı ekleme modal'ı
+ * - Dinamik buton durumları
+ *
+ * @returns {JSX.Element} Kullanıcı listesi sayfası
+ */
 const UserList: React.FC = () => {
+  // Custom hook ile state ve fonksiyonları al
   const {
-    users,
-    viewMode,
-    setViewMode,
-    showModal,
-    setShowModal,
-    handleAddUser,
+    users, // Kullanıcı listesi
+    viewMode, // Mevcut görünüm modu (table/card)
+    setViewMode, // Görünüm modu değiştirme
+    showModal, // Modal görünürlük durumu
+    setShowModal, // Modal durumu değiştirme
+    handleAddUser, // Yeni kullanıcı ekleme fonksiyonu
   } = useUserList();
 
   return (
     <Bg>
       <Card>
+        {/* Sayfa başlığı ve açıklaması */}
         <Title>Kullanıcı Listesi</Title>
         <Description>
           Tüm kullanıcıları tablo veya kart görünümünde inceleyebilir, arama
           yapabilir ve yeni kullanıcı ekleyebilirsiniz.
         </Description>
+
+        {/* Üst toolbar - görünüm ve aksiyon butonları */}
         <Toolbar>
+          {/* Sol taraf: Görünüm değiştirme butonları */}
           <div style={{ display: "flex", gap: 10 }}>
+            {/* Tablo görünümü butonu */}
             <CustomButton
               text="Tablo Görünümü"
               onClick={() => setViewMode("table")}
               variant={viewMode === "table" ? "contained" : "outlined"}
               active={viewMode === "table"}
             />
+
+            {/* Kart görünümü butonu */}
             <CustomButton
               text="Kart Görünümü"
               onClick={() => setViewMode("card")}
@@ -104,7 +180,10 @@ const UserList: React.FC = () => {
               active={viewMode === "card"}
             />
           </div>
+
+          {/* Sağ taraf: Aksiyon butonları */}
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            {/* Kullanıcı ekleme butonu */}
             <CustomButton
               text="+ Kullanıcı Ekle"
               onClick={() => setShowModal(true)}
@@ -112,11 +191,15 @@ const UserList: React.FC = () => {
             />
           </div>
         </Toolbar>
+
+        {/* Seçili görünüm moduna göre içerik render etme */}
         {viewMode === "table" ? (
           <UserTable users={users} />
         ) : (
           <UserCards users={users} />
         )}
+
+        {/* Kullanıcı ekleme modal'ı */}
         <CustomModalBlur
           isOpen={showModal}
           onClose={() => setShowModal(false)}

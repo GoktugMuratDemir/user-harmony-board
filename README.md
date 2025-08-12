@@ -1,6 +1,6 @@
-# Evreka Case Study - React TypeScript Dashboard
+# React TypeScript Dashboard
 
-Bu proje, modern web teknolojileri kullanılarak geliştirilmiş bir kullanıcı yönetim dashboard'udur. Evreka firması için hazırlanmış bir case study çalışmasıdır.
+Bu proje, modern web teknolojileri kullanılarak geliştirilmiş bir kullanıcı yönetim dashboard'udur.
 
 ## 🌐 Canlı Demo
 
@@ -216,13 +216,8 @@ Her dosya detaylı Türkçe dokümantasyon ile açıklanmıştır. Kod içerisin
 4. Push edin (`git push origin feature/AmazingFeature`)
 5. Pull Request oluşturun
 
-## 📄 Lisans
-
-Bu proje Evreka Case Study için geliştirilmiştir.
-
 ---
 
-**Geliştirici**: Evreka Case Study Team  
 **Versiyon**: 1.0.0  
 **Son Güncelleme**: 2025
   {
